@@ -10,6 +10,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import test.GsonParser;
+
 public class CallImageAPI {
 	private static final String DEF_CHATSET = "UTF-8";
 	
@@ -76,6 +78,51 @@ public class CallImageAPI {
 		}
 
 		return responseMessage;
-		
 	}
+	
+    public static Map<String, String> getImage(String strUrl, String token, String imageID) throws Exception{
+    	Map<String, String> map = new HashMap<String, String>();
+    	HttpURLConnection conn = null;  
+		String rs = null;
+		BufferedReader reader = null; 
+		strUrl = strUrl.replace("imageID", imageID);
+		try {
+			StringBuffer sb = new StringBuffer();
+			
+			URL url = new URL(strUrl);
+        	conn = (HttpURLConnection) url.openConnection(); 
+        	conn.setRequestMethod("GET");
+        	conn.setRequestProperty("Content-Type","application/json");
+        	conn.setRequestProperty("X-Auth-Token", token);
+        	conn.setUseCaches(false); 
+        	conn.connect();
+        	
+          InputStream is; 
+          Integer code = conn.getResponseCode();
+          if(code < HttpURLConnection.HTTP_BAD_REQUEST) {
+        	  is = conn.getInputStream();
+          }else {
+        	  is = conn.getErrorStream();
+          }
+          reader = new BufferedReader(new InputStreamReader(is, DEF_CHATSET));  
+          String strRead = null;  
+          while ((strRead = reader.readLine()) != null) {  
+              sb.append(strRead);  
+          }  
+          rs = sb.toString(); 
+          Map<String, Object> jsonMap = GsonParser.toMap(rs);
+//          System.out.println(jsonMap.get("name"));
+          map.put("code", code.toString());
+          map.put("message", rs);
+          map.put("name", jsonMap.get("name").toString());
+      
+		}catch(IOException e) {
+			e.printStackTrace();
+		}finally { 
+            if (conn != null) {  
+                conn.disconnect();  
+            }
+		}
+    	return map;
+    }
 }

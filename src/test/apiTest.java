@@ -136,13 +136,13 @@ public class apiTest {
               sb.append(strRead);  
           }  
           rs = sb.toString(); 
-          System.out.println(rs);
+//          System.out.println(rs);
 //          Gson gson = new Gson();
-          Map<String, Object> jsonMap = GsonParser.toMap(rs);
+//          Map<String, Object> jsonMap = GsonParser.toMap(rs);
 
           map.put("code", code.toString());
-//          map.put("message", rs);
-          map.put("name", (String)jsonMap.get("name"));
+          map.put("message", rs);
+//          map.put("name", (String)jsonMap.get("name"));
         	
           
           
