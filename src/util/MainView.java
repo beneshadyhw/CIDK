@@ -29,7 +29,14 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 public class MainView extends JFrame {
-
+	private static boolean checkRegEx(String regEx, String toCheck) {
+		boolean check = false;
+		//case insensitive
+		Pattern pattern = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher(toCheck);
+		check = matcher.matches();
+		return check;
+	}
  /**
 	 * 
 	 */
@@ -150,9 +157,7 @@ private JPanel contentPane;
   	public void focusLost(FocusEvent arg0) {
   		imageIDContent = imageID.getText().trim();
   		String regEx = "^([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fAF]){4}-([0-9a-fA-F]){12}$";
-  		Pattern pattern = Pattern.compile(regEx);
-  		Matcher matcher = pattern.matcher(imageIDContent);
-  		boolean check = matcher.matches();
+  		boolean check = checkRegEx(regEx, imageIDContent);
   		if(!check) {
   			JOptionPane.showMessageDialog(null, "您输入的镜像ID不符合格式！", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
   		}
@@ -181,7 +186,18 @@ private JPanel contentPane;
   
   //CAD NAME
   imageName = new JTextField();
-  imageName.setToolTipText("\u6B64\u955C\u50CF\u540D\u79F0\u662F\u4E3A\u60A8\u590D\u5236\u540E\u7684\u955C\u50CF\u53D6\u540D\uFF0C\u53EF\u4E0E\u539F\u955C\u50CF\u540D\u79F0\u4E0D\u540C\u3002\u6700\u7EC8\u521B\u5EFA\u684C\u9762\u7684\u65F6\u5019\u4F1A\u5728Console\u4E0A\u9009\u62E9\u8FD9\u4E2A\u540D\u5B57\uFF0C\u8BF7\u53D6\u59A5\u5584\u53D6\u540D\uFF0C\u5982\uFF1ACreo-GPU-80G");
+  imageName.addFocusListener(new FocusAdapter() {
+  	@Override
+  	public void focusLost(FocusEvent e) {
+  		imageNameContent = imageName.getText().trim();
+  		String regEx = "^[a-zA-Z0-9_.-]$|^[a-zA-Z0-9_.-][a-zA-Z0-9_. -]*[a-zA-Z0-9_.-]$";
+  		boolean check = checkRegEx(regEx, imageNameContent);
+  		if(!check) {
+  			JOptionPane.showMessageDialog(null, "您输入的镜像名称不符合格式！", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+  		}
+  	}
+  });
+  imageName.setToolTipText("\u53D6\u540D\u53EF\u4E0E\u539F\u540D\u4E0D\u540C\u3002\u8BF7\u8BB0\u4F4F\u6B64\u540D\u79F0\uFF0C\u4E4B\u540E\u521B\u5EFA\u684C\u9762\u4F1A\u7528\u5230\u3002");
   imageName.setColumns(10);
   imageName.setBounds(156, 231, 232, 21);
   contentPane.add(imageName);
