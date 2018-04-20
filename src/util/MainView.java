@@ -131,17 +131,18 @@ private JPanel contentPane;
   contentPane.add(lblid);
   
   projectID = new JTextField();
-  projectID.setToolTipText("\u6CE8\u610F\u9009\u62E9\u534E\u5357\u533A(cn-south-1)\u9879\u76EEID\u586B\u5165");
+  projectID.setToolTipText("\u8BF7\u9009\u62E9\u534E\u5357\u533A(cn-south-1)\u9879\u76EEID\u586B\u5165\uFF0C\u6CE8\u610F\u4E0D\u662F\u955C\u50CF\u7684\u9879\u76EEID");
   projectID.setColumns(10);
   projectID.setBounds(156, 139, 232, 21);
   contentPane.add(projectID);
   
   JTextArea messageBoard = new JTextArea();
+  messageBoard.setFont(new Font("宋体", Font.PLAIN, 14));
   messageBoard.setBackground(Color.WHITE);
   messageBoard.setEditable(false);
   messageBoard.setForeground(Color.BLACK);
   messageBoard.setLineWrap(true);
-  messageBoard.setBounds(38, 382, 350, 92);
+  messageBoard.setBounds(38, 362, 350, 124);
   contentPane.add(messageBoard);
   
   JLabel lblid_1 = new JLabel("\u5171\u4EAB\u955C\u50CFID\uFF1A");
@@ -160,6 +161,7 @@ private JPanel contentPane;
   		boolean check = checkRegEx(regEx, imageIDContent);
   		if(!check) {
   			JOptionPane.showMessageDialog(null, "您输入的镜像ID不符合格式！", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+  			return;
   		}
   	}
   });
@@ -180,15 +182,16 @@ private JPanel contentPane;
   imageName.addFocusListener(new FocusAdapter() {
   	@Override
   	public void focusLost(FocusEvent e) {
-  		imageNameContent = imageName.getText().trim();
-  		String regEx = "^[a-zA-Z0-9_.-]$|^[a-zA-Z0-9_.-][a-zA-Z0-9_. -]*[a-zA-Z0-9_.-]$";
-  		boolean check = checkRegEx(regEx, imageNameContent);
-  		if(!check) {
-  			JOptionPane.showMessageDialog(null, "您输入的镜像名称不符合格式！", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
-  		}
+//  		imageNameContent = imageName.getText().trim();
+//  		String regEx = "^[a-zA-Z0-9_.-]$|^[a-zA-Z0-9_.-][a-zA-Z0-9_. -]*[a-zA-Z0-9_.-]$";
+//  		boolean check = checkRegEx(regEx, imageNameContent);
+//  		if(!check) {
+//  			JOptionPane.showMessageDialog(null, "您输入的镜像名称不符合格式！", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+//  			return;
+//  		}
   	}
   });
-  imageName.setToolTipText("\u53D6\u540D\u53EF\u4E0E\u539F\u540D\u4E0D\u540C\u3002\u8BF7\u8BB0\u4F4F\u6B64\u540D\u79F0\uFF0C\u4E4B\u540E\u521B\u5EFA\u684C\u9762\u4F1A\u7528\u5230\u3002");
+  imageName.setToolTipText("\u4E3A\u590D\u5236\u540E\u7684\u955C\u50CF\u53D6\u540D\uFF0C\u53EF\u4E0E\u539F\u540D\u4E0D\u540C\u3002");
   imageName.setColumns(10);
   imageName.setBounds(156, 211, 232, 21);
   contentPane.add(imageName);
@@ -212,6 +215,12 @@ private JPanel contentPane;
 		
   		int n = JOptionPane.showConfirmDialog(null, "确认复制镜像？(此操作将持续几秒钟，请耐心等待）","CONFIRMATION", JOptionPane.YES_NO_OPTION);
   		if(n==0) {
+  	  		String regEx = "^[a-zA-Z0-9_.-]$|^[a-zA-Z0-9_.-][a-zA-Z0-9_. -]*[a-zA-Z0-9_.-]$";
+  	  		boolean check = checkRegEx(regEx, imageNameContent);
+  	  		if(!check) {
+  	  			JOptionPane.showMessageDialog(null, "您输入的镜像名称不符合格式！", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+  	  			return;
+  	  		}
 	  		try {
 	  			Map<String, String> imageResponse = new HashMap<String, String>();
 	  			Map<String, String> tokenResponse = new HashMap<String, String>();
@@ -223,15 +232,15 @@ private JPanel contentPane;
 	  			if(tokenCode == 201) {
 	  				tokenContent = tokenResponse.get("token");
 	  			}else if(tokenCode == 401) {
-	  				JOptionPane.showMessageDialog(null, "认证失败：账号或者密码输入错误", "401 Unauthorized", JOptionPane.ERROR_MESSAGE);
+	  				JOptionPane.showMessageDialog(null, "认证失败：账号或者密码输入错误.", "401 Unauthorized", JOptionPane.ERROR_MESSAGE);
 					messageBoard.setText(tokenMessage);
 					return;
 	  			}else if(tokenCode == 400) {
-	  				JOptionPane.showMessageDialog(null, "请求错误：项目ID输入错误", "400 Bad Request", JOptionPane.ERROR_MESSAGE);
+	  				JOptionPane.showMessageDialog(null, "请求错误：项目ID输入错误.", "400 Bad Request", JOptionPane.ERROR_MESSAGE);
 					messageBoard.setText(tokenMessage);
 					return;
 	  			}else {
-	  				JOptionPane.showMessageDialog(null, "请查看消息版，需要更多帮助请联系我们", tokenCode.toString()+" ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+	  				JOptionPane.showMessageDialog(null, "请查看消息版，需要更多帮助请联系我们.", tokenCode.toString()+" ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
 					messageBoard.setText(tokenMessage);
 					return;
 	  			}
@@ -241,8 +250,12 @@ private JPanel contentPane;
 	  			String imageMessage = imageResponse.get("message");
 				if(imageCode==200) {
 					JOptionPane.showMessageDialog(null, "复制镜像成功！请在控制台查看进程，谢谢使用！", "MISSION_SUCCESS", JOptionPane.INFORMATION_MESSAGE);
+					messageBoard.setText("感谢您的支持！");
+				}else if(imageCode == 400) {
+					JOptionPane.showMessageDialog(null, "复制镜像失败，请查看消息版，需要更多帮助请联系我们.", "400 Bad Request", JOptionPane.ERROR_MESSAGE);
+					messageBoard.setText(imageMessage + "\n找到“code”所对应的值，并在下面链接中匹配错误原因，谢谢。\nhttps://support.huaweicloud.com/api-ims/zh-cn_topic_0022473689.html");
 				}else {
-					JOptionPane.showMessageDialog(null, "复制镜像失败，请清空列表后重新填写", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "复制镜像失败，请清空列表后重新填写,需要更多帮助请联系我们.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
 					messageBoard.setText(imageMessage);
 				}
 			} catch (Exception e1) {
@@ -253,7 +266,7 @@ private JPanel contentPane;
   	}
   });
   IMGbutton.setAction(action_1);
-  IMGbutton.setBounds(295, 313, 93, 23);
+  IMGbutton.setBounds(295, 301, 93, 23);
   contentPane.add(IMGbutton);
   
   JButton clearBtn = new JButton("New button");
@@ -268,7 +281,7 @@ private JPanel contentPane;
   	}
   });
   clearBtn.setAction(action_2);
-  clearBtn.setBounds(181, 313, 93, 23);
+  clearBtn.setBounds(181, 301, 93, 23);
   contentPane.add(clearBtn);
   
   JTextArea lblNewLabel_1 = new JTextArea("\u6CE8\uFF1A\u955C\u50CF\u540D\u79F0\u53EA\u80FD\u7531\u5B57\u6BCD\u6570\u5B57\u7A7A\u683C\u548C\u7279\u6B8A\u5B57\u7B26-_.\u7EC4\u6210,\r\n\u4E14\u9996\u5C3E\u5B57\u7B26\u90FD\u4E0D\u80FD\u4E3A\u7A7A\u683C");
@@ -280,7 +293,7 @@ private JPanel contentPane;
   JLabel label = new JLabel("\u6D88\u606F\u677F");
   label.setFont(new Font("宋体", Font.BOLD, 14));
   label.setVerticalAlignment(SwingConstants.BOTTOM);
-  label.setBounds(38, 346, 93, 26);
+  label.setBounds(38, 326, 93, 26);
   contentPane.add(label);
   
   JLabel label_2 = new JLabel("\u7528\u6237\u540D\uFF1A");
