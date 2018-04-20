@@ -172,17 +172,8 @@ private JPanel contentPane;
   label_1.setHorizontalAlignment(SwingConstants.CENTER);
   label_1.setForeground(Color.BLACK);
   label_1.setFont(new Font("ËÎÌו", Font.PLAIN, 14));
-  label_1.setBounds(5, 228, 141, 26);
+  label_1.setBounds(5, 208, 141, 26);
   contentPane.add(label_1);
-  
-  JButton btnNewButton = new JButton("\u9A8C\u8BC1\u955C\u50CF");
-  btnNewButton.addActionListener(new ActionListener() {
-  	public void actionPerformed(ActionEvent arg0) {
-  	}
-  });
-  btnNewButton.setAction(action);
-  btnNewButton.setBounds(295, 198, 93, 23);
-  contentPane.add(btnNewButton);
   
   //CAD NAME
   imageName = new JTextField();
@@ -199,7 +190,7 @@ private JPanel contentPane;
   });
   imageName.setToolTipText("\u53D6\u540D\u53EF\u4E0E\u539F\u540D\u4E0D\u540C\u3002\u8BF7\u8BB0\u4F4F\u6B64\u540D\u79F0\uFF0C\u4E4B\u540E\u521B\u5EFA\u684C\u9762\u4F1A\u7528\u5230\u3002");
   imageName.setColumns(10);
-  imageName.setBounds(156, 231, 232, 21);
+  imageName.setBounds(156, 211, 232, 21);
   contentPane.add(imageName);
   
   JButton IMGbutton = new JButton("\u590D\u5236\u955C\u50CF");
@@ -283,7 +274,7 @@ private JPanel contentPane;
   JTextArea lblNewLabel_1 = new JTextArea("\u6CE8\uFF1A\u955C\u50CF\u540D\u79F0\u53EA\u80FD\u7531\u5B57\u6BCD\u6570\u5B57\u7A7A\u683C\u548C\u7279\u6B8A\u5B57\u7B26-_.\u7EC4\u6210,\r\n\u4E14\u9996\u5C3E\u5B57\u7B26\u90FD\u4E0D\u80FD\u4E3A\u7A7A\u683C");
   lblNewLabel_1.setBackground(UIManager.getColor("Button.background"));
   lblNewLabel_1.setForeground(Color.RED);
-  lblNewLabel_1.setBounds(38, 264, 350, 47);
+  lblNewLabel_1.setBounds(38, 244, 350, 47);
   contentPane.add(lblNewLabel_1);
   
   JLabel label = new JLabel("\u6D88\u606F\u677F");
