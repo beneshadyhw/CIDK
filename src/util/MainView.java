@@ -27,6 +27,7 @@ import javax.swing.JPasswordField;
 import javax.swing.UIManager;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.SystemColor;
 
 public class MainView extends JFrame {
 	private static boolean checkRegEx(String regEx, String toCheck) {
@@ -57,6 +58,9 @@ private JPanel contentPane;
  private String imageNameContent;
  private String tokenContent;
  
+ boolean nameCheck;
+ boolean IDCheck;
+ 
  private final Action action_1 = new DuplicateImage();
  private final Action action_2 = new ClearAction();
  private final Action action = new GetImage();
@@ -83,7 +87,7 @@ private JPanel contentPane;
   */
  public MainView() {
   setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-  setBounds(100, 100, 437, 543);
+  setBounds(100, 100, 437, 566);
   setTitle("Huawei Cloud IMG Duplicating Kit v1.0");
 //  setSize(510, 520);
   contentPane = new JPanel();
@@ -99,13 +103,13 @@ private JPanel contentPane;
   contentPane.add(lblNewLabel);
   
   accountName = new JTextField();
-  accountName.setToolTipText("\u7528\u6237\u6240\u5C5E\u4F01\u4E1A\u8D26\u6237\u540D\u79F0");
+  accountName.setToolTipText("\u5B50\u7528\u6237\u6240\u5C5E\u4F01\u4E1A\u8D26\u6237\u540D\u79F0");
   accountName.setBounds(156, 31, 232, 21);
   contentPane.add(accountName);
   accountName.setColumns(10);
   
   userName = new JTextField();
-  userName.setToolTipText("\u7528\u6237\uFF08\u5B50\u7528\u6237\uFF09\u540D\u79F0");
+  userName.setToolTipText("\u4F01\u4E1A\u5BA2\u6237\u4E3A\u5408\u4F5C\u65B9\u521B\u5EFA\u7684\u5B50\u7528\u6237\u7684\u540D\u79F0");
   userName.setColumns(10);
   userName.setBounds(156, 67, 232, 21);
   contentPane.add(userName);
@@ -136,13 +140,40 @@ private JPanel contentPane;
   projectID.setBounds(156, 139, 232, 21);
   contentPane.add(projectID);
   
+  JTextArea imageNameErrMsg = new JTextArea("");
+  imageNameErrMsg.setEditable(false);
+  imageNameErrMsg.setBackground(UIManager.getColor("Button.background"));
+  imageNameErrMsg.setForeground(Color.RED);
+  imageNameErrMsg.setBounds(38, 286, 350, 47);
+  contentPane.add(imageNameErrMsg);
+  
+  JLabel label = new JLabel("\u6D88\u606F\u677F");
+  label.setFont(new Font("宋体", Font.BOLD, 14));
+  label.setVerticalAlignment(SwingConstants.BOTTOM);
+  label.setBounds(38, 358, 93, 26);
+  contentPane.add(label);
+  
+  JLabel label_2 = new JLabel("\u5B50\u7528\u6237\u540D\uFF1A");
+  label_2.setHorizontalAlignment(SwingConstants.CENTER);
+  label_2.setForeground(Color.BLACK);
+  label_2.setFont(new Font("宋体", Font.PLAIN, 14));
+  label_2.setBounds(5, 64, 141, 26);
+  contentPane.add(label_2);
+  
+  JTextArea imageIDErrMsg = new JTextArea("");
+  imageIDErrMsg.setEditable(false);
+  imageIDErrMsg.setForeground(Color.RED);
+  imageIDErrMsg.setBackground(SystemColor.menu);
+  imageIDErrMsg.setBounds(38, 198, 350, 47);
+  contentPane.add(imageIDErrMsg);
+  
   JTextArea messageBoard = new JTextArea();
   messageBoard.setFont(new Font("宋体", Font.PLAIN, 14));
   messageBoard.setBackground(Color.WHITE);
   messageBoard.setEditable(false);
   messageBoard.setForeground(Color.BLACK);
   messageBoard.setLineWrap(true);
-  messageBoard.setBounds(38, 362, 350, 124);
+  messageBoard.setBounds(38, 394, 350, 124);
   contentPane.add(messageBoard);
   
   JLabel lblid_1 = new JLabel("\u5171\u4EAB\u955C\u50CFID\uFF1A");
@@ -158,10 +189,12 @@ private JPanel contentPane;
   	public void focusLost(FocusEvent arg0) {
   		imageIDContent = imageID.getText().trim();
   		String regEx = "^([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fAF]){4}-([0-9a-fA-F]){12}$";
-  		boolean check = checkRegEx(regEx, imageIDContent);
-  		if(!check) {
-  			JOptionPane.showMessageDialog(null, "您输入的镜像ID不符合格式！", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
-  			return;
+  		IDCheck = checkRegEx(regEx, imageIDContent);
+  		if(!IDCheck) {
+  			imageIDErrMsg.setText("注意！镜像ID格式错误！请重新填写。");
+  		}
+  		else {
+  			imageIDErrMsg.setText("格式正确^_^");
   		}
   	}
   });
@@ -174,7 +207,7 @@ private JPanel contentPane;
   label_1.setHorizontalAlignment(SwingConstants.CENTER);
   label_1.setForeground(Color.BLACK);
   label_1.setFont(new Font("宋体", Font.PLAIN, 14));
-  label_1.setBounds(5, 208, 141, 26);
+  label_1.setBounds(5, 255, 141, 26);
   contentPane.add(label_1);
   
   //CAD NAME
@@ -182,18 +215,20 @@ private JPanel contentPane;
   imageName.addFocusListener(new FocusAdapter() {
   	@Override
   	public void focusLost(FocusEvent e) {
-//  		imageNameContent = imageName.getText().trim();
-//  		String regEx = "^[a-zA-Z0-9_.-]$|^[a-zA-Z0-9_.-][a-zA-Z0-9_. -]*[a-zA-Z0-9_.-]$";
-//  		boolean check = checkRegEx(regEx, imageNameContent);
-//  		if(!check) {
-//  			JOptionPane.showMessageDialog(null, "您输入的镜像名称不符合格式！", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
-//  			return;
-//  		}
+  		imageNameContent = imageName.getText().trim();
+  		String regEx = "^[a-zA-Z0-9_.-]$|^[a-zA-Z0-9_.-][a-zA-Z0-9_. -]*[a-zA-Z0-9_.-]$";
+  		nameCheck = checkRegEx(regEx, imageNameContent);
+  		if(!nameCheck) {
+  			imageNameErrMsg.setText("注：镜像名称只能由字母数字空格和特殊字符-_.组成,\r\n" + 
+  					"且首尾字符都不能为空格");
+  		}else {
+  			imageNameErrMsg.setText("格式正确^_^");
+  		}
   	}
   });
   imageName.setToolTipText("\u4E3A\u590D\u5236\u540E\u7684\u955C\u50CF\u53D6\u540D\uFF0C\u53EF\u4E0E\u539F\u540D\u4E0D\u540C\u3002");
   imageName.setColumns(10);
-  imageName.setBounds(156, 211, 232, 21);
+  imageName.setBounds(156, 255, 232, 21);
   contentPane.add(imageName);
   
   JButton IMGbutton = new JButton("\u590D\u5236\u955C\u50CF");
@@ -215,10 +250,8 @@ private JPanel contentPane;
 		
   		int n = JOptionPane.showConfirmDialog(null, "确认复制镜像？(此操作将持续几秒钟，请耐心等待）","CONFIRMATION", JOptionPane.YES_NO_OPTION);
   		if(n==0) {
-  	  		String regEx = "^[a-zA-Z0-9_.-]$|^[a-zA-Z0-9_.-][a-zA-Z0-9_. -]*[a-zA-Z0-9_.-]$";
-  	  		boolean check = checkRegEx(regEx, imageNameContent);
-  	  		if(!check) {
-  	  			JOptionPane.showMessageDialog(null, "您输入的镜像名称不符合格式！", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+  	  		if(!nameCheck || !IDCheck) {
+  	  			JOptionPane.showMessageDialog(null, "您输入的镜像名称或者镜像ID不符合格式！", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
   	  			return;
   	  		}
 	  		try {
@@ -266,7 +299,7 @@ private JPanel contentPane;
   	}
   });
   IMGbutton.setAction(action_1);
-  IMGbutton.setBounds(295, 301, 93, 23);
+  IMGbutton.setBounds(295, 340, 93, 23);
   contentPane.add(IMGbutton);
   
   JButton clearBtn = new JButton("New button");
@@ -281,27 +314,8 @@ private JPanel contentPane;
   	}
   });
   clearBtn.setAction(action_2);
-  clearBtn.setBounds(181, 301, 93, 23);
+  clearBtn.setBounds(181, 340, 93, 23);
   contentPane.add(clearBtn);
-  
-  JTextArea lblNewLabel_1 = new JTextArea("\u6CE8\uFF1A\u955C\u50CF\u540D\u79F0\u53EA\u80FD\u7531\u5B57\u6BCD\u6570\u5B57\u7A7A\u683C\u548C\u7279\u6B8A\u5B57\u7B26-_.\u7EC4\u6210,\r\n\u4E14\u9996\u5C3E\u5B57\u7B26\u90FD\u4E0D\u80FD\u4E3A\u7A7A\u683C");
-  lblNewLabel_1.setBackground(UIManager.getColor("Button.background"));
-  lblNewLabel_1.setForeground(Color.RED);
-  lblNewLabel_1.setBounds(38, 244, 350, 47);
-  contentPane.add(lblNewLabel_1);
-  
-  JLabel label = new JLabel("\u6D88\u606F\u677F");
-  label.setFont(new Font("宋体", Font.BOLD, 14));
-  label.setVerticalAlignment(SwingConstants.BOTTOM);
-  label.setBounds(38, 326, 93, 26);
-  contentPane.add(label);
-  
-  JLabel label_2 = new JLabel("\u7528\u6237\u540D\uFF1A");
-  label_2.setHorizontalAlignment(SwingConstants.CENTER);
-  label_2.setForeground(Color.BLACK);
-  label_2.setFont(new Font("宋体", Font.PLAIN, 14));
-  label_2.setBounds(5, 64, 141, 26);
-  contentPane.add(label_2);
 
  }
 
