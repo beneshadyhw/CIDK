@@ -28,6 +28,8 @@ import javax.swing.UIManager;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.SystemColor;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class MainView extends JFrame {
 	private static boolean checkRegEx(String regEx, String toCheck) {
@@ -57,13 +59,13 @@ private JPanel contentPane;
  private String imageIDContent;
  private String imageNameContent;
  private String tokenContent;
+ private String endpointContent = "";
  
  boolean nameCheck;
  boolean IDCheck;
  
  private final Action action_1 = new DuplicateImage();
  private final Action action_2 = new ClearAction();
- private final Action action = new GetImage();
  
 
  /**
@@ -85,86 +87,108 @@ private JPanel contentPane;
  /**
   * Create the frame.
   */
- public MainView() {
+ @SuppressWarnings({ "rawtypes", "unchecked" })
+public MainView() {
   setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   setBounds(100, 100, 437, 566);
-  setTitle("Huawei Cloud IMG Duplicating Kit v1.0");
+  setTitle("Huawei Cloud IMG Duplicating Kit v3.0");
 //  setSize(510, 520);
   contentPane = new JPanel();
   contentPane.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED, new Color(0, 0, 0), new Color(255, 0, 0)), "\u534E\u4E3A\u4E91\u955C\u50CF\u590D\u5236\u5C0F\u5DE5\u5177", TitledBorder.CENTER, TitledBorder.TOP, null, Color.RED));
   setContentPane(contentPane);
   contentPane.setLayout(null);
   
+  JLabel lblregion = new JLabel("\u5730\u533ARegion\uFF1A");
+  lblregion.setHorizontalAlignment(SwingConstants.CENTER);
+  lblregion.setForeground(Color.BLACK);
+  lblregion.setFont(new Font("宋体", Font.PLAIN, 14));
+  lblregion.setBounds(10, 26, 141, 26);
+  contentPane.add(lblregion);
+  
+  JComboBox<String> regionEndpnt = new JComboBox<String>();
+  regionEndpnt.setModel(new DefaultComboBoxModel(Region.values()));
+  regionEndpnt.setBounds(161, 27, 232, 21);
+  contentPane.add(regionEndpnt);
+  regionEndpnt.addActionListener(new ActionListener() {
+	  public void actionPerformed(ActionEvent e) {
+		  if(e.getSource() instanceof JComboBox) {
+			  JComboBox<String> comboBox = (JComboBox)e.getSource();
+			  Region selected = (Region)comboBox.getSelectedItem();
+			  endpointContent = selected.getEndpoint();
+		  }
+	  }
+  });
+  
   JLabel lblNewLabel = new JLabel("\u534E\u4E3A\u4E91\u8D26\u53F7\u540D\uFF1A");
   lblNewLabel.setForeground(new Color(0, 0, 0));
   lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
   lblNewLabel.setFont(new Font("宋体", Font.PLAIN, 14));
-  lblNewLabel.setBounds(5, 28, 141, 26);
+  lblNewLabel.setBounds(10, 62, 141, 26);
   contentPane.add(lblNewLabel);
   
   accountName = new JTextField();
   accountName.setToolTipText("\u5B50\u7528\u6237\u6240\u5C5E\u4F01\u4E1A\u8D26\u6237\u540D\u79F0");
-  accountName.setBounds(156, 31, 232, 21);
+  accountName.setBounds(161, 65, 232, 21);
   contentPane.add(accountName);
   accountName.setColumns(10);
   
   userName = new JTextField();
   userName.setToolTipText("\u4F01\u4E1A\u5BA2\u6237\u4E3A\u5408\u4F5C\u65B9\u521B\u5EFA\u7684\u5B50\u7528\u6237\u7684\u540D\u79F0");
   userName.setColumns(10);
-  userName.setBounds(156, 67, 232, 21);
+  userName.setBounds(161, 101, 232, 21);
   contentPane.add(userName);
   
   JLabel labelPW = new JLabel("\u5BC6\u7801\uFF1A");
   labelPW.setHorizontalAlignment(SwingConstants.CENTER);
   labelPW.setForeground(Color.BLACK);
   labelPW.setFont(new Font("宋体", Font.PLAIN, 14));
-  labelPW.setBounds(5, 100, 141, 26);
+  labelPW.setBounds(10, 134, 141, 26);
   contentPane.add(labelPW);
   
   passwordField = new JPasswordField();
   passwordField.setToolTipText("\u60A8\u7684\u767B\u9646\u5BC6\u7801");
   passwordField.setColumns(10);
-  passwordField.setBounds(156, 103, 232, 21);
+  passwordField.setBounds(161, 137, 232, 21);
   contentPane.add(passwordField);
   
   JLabel lblid = new JLabel("\u9879\u76EEID\uFF1A");
   lblid.setHorizontalAlignment(SwingConstants.CENTER);
   lblid.setForeground(Color.BLACK);
   lblid.setFont(new Font("宋体", Font.PLAIN, 14));
-  lblid.setBounds(5, 136, 141, 26);
+  lblid.setBounds(10, 170, 141, 26);
   contentPane.add(lblid);
   
   projectID = new JTextField();
   projectID.setToolTipText("\u8BF7\u9009\u62E9\u534E\u5357\u533A(cn-south-1)\u9879\u76EEID\u586B\u5165\uFF0C\u6CE8\u610F\u4E0D\u662F\u955C\u50CF\u7684\u9879\u76EEID");
   projectID.setColumns(10);
-  projectID.setBounds(156, 139, 232, 21);
+  projectID.setBounds(161, 173, 232, 21);
   contentPane.add(projectID);
   
   JTextArea imageNameErrMsg = new JTextArea("");
   imageNameErrMsg.setEditable(false);
   imageNameErrMsg.setBackground(UIManager.getColor("Button.background"));
   imageNameErrMsg.setForeground(Color.RED);
-  imageNameErrMsg.setBounds(38, 286, 350, 47);
+  imageNameErrMsg.setBounds(43, 299, 350, 47);
   contentPane.add(imageNameErrMsg);
   
   JLabel label = new JLabel("\u6D88\u606F\u677F");
   label.setFont(new Font("宋体", Font.BOLD, 14));
   label.setVerticalAlignment(SwingConstants.BOTTOM);
-  label.setBounds(38, 358, 93, 26);
+  label.setBounds(43, 349, 93, 26);
   contentPane.add(label);
   
   JLabel label_2 = new JLabel("\u5B50\u7528\u6237\u540D\uFF1A");
   label_2.setHorizontalAlignment(SwingConstants.CENTER);
   label_2.setForeground(Color.BLACK);
   label_2.setFont(new Font("宋体", Font.PLAIN, 14));
-  label_2.setBounds(5, 64, 141, 26);
+  label_2.setBounds(10, 98, 141, 26);
   contentPane.add(label_2);
   
   JTextArea imageIDErrMsg = new JTextArea("");
   imageIDErrMsg.setEditable(false);
   imageIDErrMsg.setForeground(Color.RED);
-  imageIDErrMsg.setBackground(SystemColor.menu);
-  imageIDErrMsg.setBounds(38, 198, 350, 47);
+  imageIDErrMsg.setBackground(UIManager.getColor("Button.background"));
+  imageIDErrMsg.setBounds(43, 232, 350, 26);
   contentPane.add(imageIDErrMsg);
   
   JTextArea messageBoard = new JTextArea();
@@ -173,14 +197,14 @@ private JPanel contentPane;
   messageBoard.setEditable(false);
   messageBoard.setForeground(Color.BLACK);
   messageBoard.setLineWrap(true);
-  messageBoard.setBounds(38, 394, 350, 124);
+  messageBoard.setBounds(38, 385, 350, 133);
   contentPane.add(messageBoard);
   
   JLabel lblid_1 = new JLabel("\u5171\u4EAB\u955C\u50CFID\uFF1A");
   lblid_1.setHorizontalAlignment(SwingConstants.CENTER);
   lblid_1.setForeground(Color.BLACK);
   lblid_1.setFont(new Font("宋体", Font.PLAIN, 14));
-  lblid_1.setBounds(5, 172, 141, 26);
+  lblid_1.setBounds(10, 206, 141, 26);
   contentPane.add(lblid_1);
   
   imageID = new JTextField();
@@ -200,14 +224,14 @@ private JPanel contentPane;
   });
   imageID.setToolTipText("\u60A8\u6240\u9700\u8981\u590D\u5236\u7684\u955C\u50CF\u7684\u955C\u50CFID");
   imageID.setColumns(10);
-  imageID.setBounds(156, 175, 232, 21);
+  imageID.setBounds(161, 209, 232, 21);
   contentPane.add(imageID);
   
   JLabel label_1 = new JLabel("\u955C\u50CF\u540D\u79F0\uFF1A");
   label_1.setHorizontalAlignment(SwingConstants.CENTER);
   label_1.setForeground(Color.BLACK);
   label_1.setFont(new Font("宋体", Font.PLAIN, 14));
-  label_1.setBounds(5, 255, 141, 26);
+  label_1.setBounds(10, 268, 141, 26);
   contentPane.add(label_1);
   
   //CAD NAME
@@ -228,7 +252,7 @@ private JPanel contentPane;
   });
   imageName.setToolTipText("\u4E3A\u590D\u5236\u540E\u7684\u955C\u50CF\u53D6\u540D\uFF0C\u53EF\u4E0E\u539F\u540D\u4E0D\u540C\u3002");
   imageName.setColumns(10);
-  imageName.setBounds(156, 255, 232, 21);
+  imageName.setBounds(161, 268, 232, 21);
   contentPane.add(imageName);
   
   JButton IMGbutton = new JButton("\u590D\u5236\u955C\u50CF");
@@ -243,7 +267,7 @@ private JPanel contentPane;
 		projectIDContent = projectID.getText().trim();
 		//check empty input
 		if(imageIDContent.isEmpty() || imageNameContent.isEmpty() || accountNameContent.isEmpty() || 
-				userNameContent.isEmpty() || passwordContent.isEmpty() || projectIDContent.isEmpty()) {
+				userNameContent.isEmpty() || passwordContent.isEmpty() || projectIDContent.isEmpty()||endpointContent.isEmpty()) {
 			JOptionPane.showMessageDialog(null, "输入信息不能为空！", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
@@ -259,7 +283,9 @@ private JPanel contentPane;
 	  			Map<String, String> tokenResponse = new HashMap<String, String>();
 	  			
 	  			//获取Token
-	  			tokenResponse = CallTokenAPI.getToken("https://iam.cn-south-1.myhuaweicloud.com/v3/auth/tokens", userNameContent, accountNameContent, projectIDContent, passwordContent);
+	  			String tokenAPI = "https://iam." + endpointContent + ".myhuaweicloud.com/v3/auth/tokens";
+	  			tokenResponse = CallTokenAPI.getToken(tokenAPI, userNameContent, accountNameContent, projectIDContent, passwordContent);
+	  			messageBoard.setText(tokenAPI);
 	  			Integer tokenCode = Integer.parseInt(tokenResponse.get("code"));
 	  			String tokenMessage = tokenResponse.get("message");
 	  			if(tokenCode == 201) {
@@ -278,7 +304,9 @@ private JPanel contentPane;
 					return;
 	  			}
 	  			
-	  			imageResponse = CallImageAPI.dupImage("https://ims.cn-south-1.myhuaweicloud.com/v1/cloudimages/imageID/copy", tokenContent, imageIDContent, imageNameContent);
+	  			String imsAPI = "https://ims." + endpointContent + ".myhuaweicloud.com/v1/cloudimages/imageID/copy";
+	  			imageResponse = CallImageAPI.dupImage(imsAPI, tokenContent, imageIDContent, imageNameContent);
+	  			messageBoard.setText(imsAPI);
 	  			int imageCode = Integer.parseInt(imageResponse.get("code"));
 	  			String imageMessage = imageResponse.get("message");
 				if(imageCode==200) {
@@ -299,7 +327,7 @@ private JPanel contentPane;
   	}
   });
   IMGbutton.setAction(action_1);
-  IMGbutton.setBounds(295, 340, 93, 23);
+  IMGbutton.setBounds(300, 352, 93, 23);
   contentPane.add(IMGbutton);
   
   JButton clearBtn = new JButton("New button");
@@ -314,9 +342,8 @@ private JPanel contentPane;
   	}
   });
   clearBtn.setAction(action_2);
-  clearBtn.setBounds(181, 340, 93, 23);
+  clearBtn.setBounds(186, 352, 93, 23);
   contentPane.add(clearBtn);
-
  }
 
 	private class DuplicateImage extends AbstractAction {
@@ -338,18 +365,6 @@ private JPanel contentPane;
 		public ClearAction() {
 			putValue(NAME, "重置表单");
 			putValue(SHORT_DESCRIPTION, "清空表单以重新输入");
-		}
-		public void actionPerformed(ActionEvent e) {
-		}
-	}
-	private class GetImage extends AbstractAction {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -6201010176894414391L;
-		public GetImage() {
-			putValue(NAME, "验证镜像");
-			putValue(SHORT_DESCRIPTION, "Some short description");
 		}
 		public void actionPerformed(ActionEvent e) {
 		}
