@@ -32,6 +32,7 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
 public class MainView extends JFrame {
+	//util functions
 	private static boolean checkRegEx(String regEx, String toCheck) {
 		boolean check = false;
 		//case insensitive
